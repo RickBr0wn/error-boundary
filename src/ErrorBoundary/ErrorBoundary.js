@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 
 export default class ErrorBoundary extends React.Component {
   static propTypes = {
-    children: PropTypes.object
+    children: PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.arrayOf(PropTypes.node)
+    ]).isRequired,
+    render: PropTypes.func.isRequired
   }
 
   state = {
@@ -22,7 +26,7 @@ export default class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <div className='error'>Oops, an error has occured!</div>
+      return this.props.render(this.state.error, this.state.errorInfo)
     }
     return this.props.children
   }
